@@ -1,0 +1,47 @@
+[routers:vars]
+ansible_user=ec2-user
+
+[routers:children]
+cisco
+juniper
+arista
+
+[cisco]
+rtr1 ansible_host=3.144.13.156 private_ip=172.16.0.229
+[arista]
+rtr2 ansible_host=18.119.118.28 private_ip=172.18.190.7
+rtr4 ansible_host=3.145.46.199 private_ip=172.18.62.29
+[juniper]
+rtr3 ansible_host=3.12.152.33 private_ip=172.16.41.135
+
+[cisco:vars]
+ansible_network_os=ios
+ansible_connection=network_cli
+
+[juniper:vars]
+ansible_network_os=junos
+ansible_connection=netconf
+
+[arista:vars]
+ansible_network_os=eos
+ansible_connection=network_cli
+ansible_become=true
+ansible_become_method=enable
+
+[dc1]
+rtr1
+rtr3
+
+[dc2]
+rtr2
+rtr4
+
+[control]
+ansible-1 ansible_host=3.139.72.107 ansible_user=ec2-user private_ip=172.16.189.231
+
+[network:children]
+routers
+[network:vars]
+restore_inventory="Workshop Inventory"
+restore_credential="Workshop Credential"
+restore_project="Workshop Project"
